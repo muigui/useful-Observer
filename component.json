@@ -1,0 +1,17 @@
+{
+	"dependencies" : {
+		"muigui/useful-util" : "*"
+	},
+	"description"  : "useful Observer pattern implementation",
+	"development"  : {
+		"chaijs/chai"       : "*",
+		"visionmedia/mocha" : "*"
+	},
+	"keywords"     : ["mvc", "observer", "programming"],
+	"license"      : "MIT",
+	"main"         : "index.js",
+	"name"         : "useful-Observer",
+	"repo"         : "muigui/useful-Observer",
+	"scripts"      : ["index.js"],
+	"version"      : "0.0.1"
+}

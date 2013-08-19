@@ -1,0 +1,33 @@
+{
+	"author"          : {
+		"name"        : "constantology",
+		"email"       : "christos@muigui.com",
+		"url"         : "http://muigui.com"
+	},
+	"description"     : "useful Observer pattern implementation",
+ 	"dependencies" : {
+		"useful-util" : "*"
+	},
+ 	"devDependencies" : {
+		"chai"        : "*",
+		"mocha"       : "*"
+ 	},
+ 	"engines"         : {
+ 		"node"        : ">= 0.8.x"
+ 	},
+	"keywords"        : ["mvc", "observer", "programming"],
+	"licenses"        : [ {
+		"type"        : "MIT",
+		"url"         : "https://raw.github.com/muigui/useful-Observer/master/LICENSE"
+	} ],
+	"main"            : "./index.js",
+	"name"            : "useful-Observer",
+	"repository"      : {
+		"type"        : "git",
+		"url"         : "git@github.com:muigui/useful-Observer.git"
+	},
+	"scripts"         : {
+		"test"        : "mocha -c --ignore-leaks -R spec -u tdd ./test/runner.js"
+	},
+	"version"         : "0.0.1"
+}
