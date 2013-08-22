@@ -21,7 +21,7 @@
 		"url"         : "https://raw.github.com/muigui/useful-Observer/master/LICENSE"
 	} ],
 	"main"            : "./index.js",
-	"name"            : "useful-Observer",
+	"name"            : "useful-observer",
 	"repository"      : {
 		"type"        : "git",
 		"url"         : "git@github.com:muigui/useful-Observer.git"
