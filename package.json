@@ -6,11 +6,11 @@
 	},
 	"description"     : "useful Observer pattern implementation",
  	"dependencies" : {
-		"useful-util" : "*"
+		"useful-util" : "latest"
 	},
  	"devDependencies" : {
-		"chai"        : "*",
-		"mocha"       : "*"
+		"chai"        : "latest",
+		"mocha"       : "latest"
  	},
  	"engines"         : {
  		"node"        : ">= 0.8.x"
