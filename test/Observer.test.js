@@ -1,4 +1,6 @@
 suite( 'muigui/useful-Observer', function() {
+	function k( item ) { return item; }
+	function noop() {}
 	function testCallback( obs, success, fn ) { fn.call( this, obs, success ); }
 
 	var ctx      = { foo : 'bar' },
@@ -36,7 +38,7 @@ suite( 'muigui/useful-Observer', function() {
 		observer.broadcast( 'test:addobserver', false );
 	} );
 
-	test( 'broadcasting observer callbacks added with a configuration Object', function( done ) {
+	var test2 = test( 'broadcasting observer callbacks added with a configuration Object', function( done ) {
 		observer.broadcast( 'test:config:object', true, createExpectations( done ) );
 	} );
 
@@ -161,10 +163,10 @@ suite( 'muigui/useful-Observer', function() {
 
 	test( 'purgeObservers', function( done ) {
 		var observer = new Observer( {
-			event1 : { fn : [util.noop, util.k], ctx : this },
-			event2 : { fn :  util.noop,      ctx : this },
-			event3 : util.noop,
-			event4 : util.k,
+			event1 : { fn : [noop, k], ctx : this },
+			event2 : { fn :  noop,      ctx : this },
+			event3 : noop,
+			event4 : k,
 			ctx    : this
 		} );
 
@@ -189,10 +191,10 @@ suite( 'muigui/useful-Observer', function() {
 
 	test( 'destroy', function( done ) {
 		var o = new Observer( {
-			event1 : { fn : [util.noop, util.k], ctx : this },
-			event2 : { fn : util.noop, ctx : this },
-			event3 : util.noop,
-			event4 : util.k,
+			event1 : { fn : [noop, k], ctx : this },
+			event2 : { fn : noop, ctx : this },
+			event3 : noop,
+			event4 : k,
 			ctx    : this
 		} );
 

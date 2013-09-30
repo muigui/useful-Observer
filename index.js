@@ -1,10 +1,11 @@
-	var util  = require( 'useful-util' ),
+	var copy  = require( 'useful-copy' ),
 
 		UNDEF;
 
 // class Observer
 	function Observer( observers ) {
-		this.listeners = Object.create( null );
+		this.event_queue = [];
+		this.listeners   = Object.create( null );
 
 		if ( !observers )
 			observers = this.observers;
@@ -21,6 +22,7 @@
 		broadcasting         : false,
 		destroyed            : false,
 		destroying           : false,
+		event_queue          : null,
 		listeners            : null,
 		observer_suspended   : false,
 
@@ -38,12 +40,13 @@
 			if ( !queue.length )  	                // if no event queue, then don't even bother
 				return this;
 
+			this.event_queue.unshift( this.broadcasting );
 			this.broadcasting = event;
 
 // if a callback returns false then we want to stop broadcasting, every will do this, forEach won't!
 			queue.every( this.fireEventCallback.bind( this, Array.prototype.slice.call( arguments, 1 ) ) );
 
-			this.broadcasting = false;
+			this.broadcasting = this.event_queue.shift();
 
 			return this;
 		},
@@ -74,14 +77,15 @@
 
 			this.onDestroy();
 
+			this.broadcast( 'destroy' );
+
 			this.observer_suspended = true;
 
 			this.destroying         = false;
 
 			this.destroyed          = true;
 
-			this.broadcast( 'destroy' );
-
+			delete this.event_queue;
 			delete this.listeners;
 
 			this.afterDestroy();
@@ -195,7 +199,7 @@
 			switch( Object.prototype.toString.call( config ) ) {
 				case '[object Boolean]' : config = { single : !!config };                       break;
 				case '[object Number]'  : config = { delay  :   config };                       break;
-				case '[object Object]'  : config = util.merge( Object.create( null ), config ); break;
+				case '[object Object]'  : config = copy.merge( Object.create( null ), config ); break;
 				default        : config = Object.create( null );
 			}
 
@@ -232,8 +236,9 @@
 		onDestroy            : function() { return this; }
 	};
 
-	Observer.prototype.on  = Observer.prototype.observe;
-	Observer.prototype.off = Observer.prototype.ignore;
+	Observer.prototype.on      = Observer.prototype.observe;
+	Observer.prototype.off     = Observer.prototype.ignore;
+	Observer.prototype.trigger = Observer.prototype.broadcast;
 
 // class Callback
 	function Callback( fn, config ) {
@@ -379,7 +384,7 @@
 	}
 
 	function observe( observer, listeners ) {
-		listeners = util.copy( Object.create( null ), listeners );
+		listeners = copy( Object.create( null ), listeners );
 
 		if ( !listeners.ctx )
 			listeners.ctx = observer;

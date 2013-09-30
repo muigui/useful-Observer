@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "muigui/useful-util": "latest"
+    "muigui/useful-copy": "latest"
   },
   "description": "useful Observer pattern implementation",
   "development": {
@@ -19,5 +19,5 @@
   "scripts": [
     "index.js"
   ],
-  "version": "0.0.2"
+  "version": "0.0.3"
 }
