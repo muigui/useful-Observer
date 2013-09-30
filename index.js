@@ -111,7 +111,7 @@
 
 			event = wildCardEsc( String( event ).toLowerCase() );
 
-			var cb,
+			var cb, internal,
 				queue   = this.listeners[event],
 				type_fn = Object.prototype.toString.call( fn );
 
@@ -132,17 +132,21 @@
 						break;
 
 					case '[object String]' :
-						if ( ctx && typeof ctx == 'object' )
+						if ( ctx && typeof ctx == 'object' ) {
 							fn  = ctx[fn];
+							if ( ctx === this && typeof fn === 'function' )
+								internal = true;
+						}
 						else if ( typeof this[fn] == 'function' ) {
-							fn  = this[fn];
-							ctx = this;
+							fn       = this[fn];
+							ctx      = this;
+							internal = true;
 						}
 						break;
 				}
 
 				if ( typeof fn == 'function' )
-					queue.push( new Callback( fn, this.createCallbackConfig( config, ctx || this ) ) );
+					queue.push( new Callback( fn, this.createCallbackConfig( config, ctx || this, internal ) ) );
 			}
 
 			return this;
@@ -195,7 +199,7 @@
 		},
 // internal methods
 		afterDestroy         : function() { return this; },
-		createCallbackConfig : function( config, ctx ) {
+		createCallbackConfig : function( config, ctx, internal ) {
 			switch( Object.prototype.toString.call( config ) ) {
 				case '[object Boolean]' : config = { single : !!config };                       break;
 				case '[object Number]'  : config = { delay  :   config };                       break;
@@ -208,6 +212,9 @@
 
 			config.ctx = ctx || this;
 
+			if ( internal === true )
+				config.internal = true;
+
 			return config;
 		},
 		fireEventCallback    : function( args, cb ) {
@@ -216,7 +223,8 @@
 
 			args = args.slice( 0 );
 
-			if ( cb.internal || !!key( this, cb.fn ) ) {               // if the original callback function is a method on this
+			if ( cb.internal || ( typeof cb.internal !== 'boolean' && !!key( this, cb.fn ) ) ) {
+													                   // if the original callback function is a method on this
 				args[0] !== this || args.shift();                      // Observer then if the first argument is the Observer
 				cb.internal = true;                                    // remove it, as it's an internal event listener.
 			}                                                          // otherwise, if the Observer is not the
@@ -252,6 +260,9 @@
 			this.ctx        = config.ctx || null;
 			this.single     = !!config.single;
 
+			if ( config.internal === true )
+				this.internal = true;
+
 			if ( !isNaN( config.buffer ) )
 				this.buffer = config.buffer;
 
@@ -272,7 +283,7 @@
 
 // public properties
 		disabled           : false,
-		internal           : false,
+		internal           : null,
 
 // internal properties
 		bufferId           : null,
